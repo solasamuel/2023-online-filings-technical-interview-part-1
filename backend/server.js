@@ -10,7 +10,7 @@ process.on('uncaughtException', err => {
 })
 
 
-// Connecting to database
+// connecting to database
 connectDatabase()
 
 const server = app.listen(process.env.PORT, () => {
