@@ -115,3 +115,66 @@ exports.deleteTask = catchAsyncErrors(async (req, res, next) => {
         message: 'Task is deleted'
     })
 })
+
+/**
+ * Get all tasks and sort them by start date
+ * 
+ * => /api/tasks/sort/startDate
+ */
+exports.getTasksAndSortByStartDate = catchAsyncErrors(async (req, res, next) => {
+
+    let tasks = await Task.find();
+
+    tasks.sort((a, b) => {
+        return a.startDate >= b.startDate
+            ? 1
+            : -1
+    })
+
+    res.status(200).json({
+        success: true,
+        tasks
+    })
+})
+
+/**
+ * Get all tasks and sort them by due date
+ * 
+ * => /api/tasks/sort/dueDate
+ */
+exports.getTasksAndSortByDueDate = catchAsyncErrors(async (req, res, next) => {
+
+    let tasks = await Task.find();
+
+    tasks.sort((a, b) => {
+        return a.dueDate >= b.dueDate
+            ? 1
+            : -1
+    })
+
+    res.status(200).json({
+        success: true,
+        tasks
+    })
+})
+
+/**
+ * Get all tasks and sort them by done date
+ * 
+ * => /api/tasks/sort/doneDate
+ */
+exports.getTasksAndSortByDoneDate = catchAsyncErrors(async (req, res, next) => {
+
+    let tasks = await Task.find();
+
+    tasks.sort((a, b) => {
+        return a.doneDate >= b.doneDate
+            ? 1
+            : -1
+    })
+
+    res.status(200).json({
+        success: true,
+        tasks
+    })
+})

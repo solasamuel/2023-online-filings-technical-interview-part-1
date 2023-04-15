@@ -5,7 +5,10 @@ const {
     createTask,
     updateTask,
     getTasks,
-    deleteTask
+    deleteTask,
+    getTasksAndSortByStartDate,
+    getTasksAndSortByDueDate,
+    getTasksAndSortByDoneDate
 } = require('../controllers/taskController');
 
 
@@ -15,6 +18,12 @@ router.route('/task/:id')
                         .put(updateTask)
                         .delete(deleteTask);
 
-router.route('/tasks').get(getTasks)
+router.route('/tasks').get(getTasks);
+
+router.route('/tasks/sort/startDate').get(getTasksAndSortByStartDate);
+
+router.route('/tasks/sort/dueDate').get(getTasksAndSortByDueDate);
+
+router.route('/tasks/sort/doneDate').get(getTasksAndSortByDoneDate);
 
 module.exports = router

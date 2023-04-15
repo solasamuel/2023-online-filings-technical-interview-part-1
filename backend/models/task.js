@@ -25,11 +25,9 @@ const taskSchema = new mongoose.Schema({
     },
     dueDate: {
         type: Date,
-        default: Date.now
     },
     doneDate: {
         type: Date,
-        default: Date.now
     },
     project: {
         type: String
