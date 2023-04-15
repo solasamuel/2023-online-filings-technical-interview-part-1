@@ -86,5 +86,23 @@ describe('Task API', () => {
         expect(deletedTask).toBeNull();
     });
 
+    it('should filter tasks by status', async () => {
+        // act
+        const res = await request(app).get('/api/tasks?status=To-do');
+
+        // assert
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.tasks.length).toBeGreaterThan(0);
+    });
+
+    it('should search tasks', async () => {
+        // act
+        const res = await request(app).get('/api/tasks?keyword=e');
+
+        // assert
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.tasks.length).toBeGreaterThan(0);
+    });
+
 
 });

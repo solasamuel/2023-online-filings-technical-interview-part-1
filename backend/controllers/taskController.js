@@ -1,7 +1,7 @@
 const Task = require('../models/task');
 const ErrorHandler = require('../utils/errorHandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
-
+const APIFeatures = require('../utils/apiFeatures')
 
 /**
  * Create a new task and return newly created
@@ -23,23 +23,20 @@ exports.createTask = catchAsyncErrors(async (req, res, next) => {
 
     const { name, status, startDate, dueDate, doneDate, project } = req.body;
 
-    try {
-        const task = await Task.create({
-            name,
-            status,
-            startDate,
-            dueDate,
-            doneDate,
-            project
-        })
+    const task = await Task.create({
+        name,
+        status,
+        startDate,
+        dueDate,
+        doneDate,
+        project
+    })
 
-        res.status(201).json({
-            success: true,
-            task
-        })
-    } catch (error) {
-        console.log(error)
-    }
+    res.status(201).json({
+        success: true,
+        task
+    })
+
 })
 
 /**
@@ -59,22 +56,16 @@ exports.updateTask = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler('Task not found', 404))
     }
 
-    const { name, status, startDate, dueDate, doneDate, project } = req.body;
+    task = await Task.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+        useFindAndNotify: false,
+    })
 
-    try {
-        task = await Task.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true,
-            useFindAndNotify: false,
-        })
-
-        res.status(200).json({
-            success: true,
-            task
-        })
-    } catch (error) {
-        console.log(error)
-    }
+    res.status(200).json({
+        success: true,
+        task
+    })
 })
 
 /**
@@ -84,16 +75,16 @@ exports.updateTask = catchAsyncErrors(async (req, res, next) => {
  */
 exports.getTasks = catchAsyncErrors(async (req, res, next) => {
 
-    try {
-        const tasks = await Task.find();
+    const apiFeatures = new APIFeatures(Task.find(), req.query)
+        .search()
+        .filter()
 
-        res.status(200).json({
-            success: true,
-            tasks
-        })
-    } catch (error) {
-        console.log(error);
-    }
+    let tasks = await apiFeatures.query
+
+    res.status(200).json({
+        success: true,
+        tasks
+    })
 })
 
 /**
