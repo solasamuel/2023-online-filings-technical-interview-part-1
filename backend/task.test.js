@@ -52,21 +52,38 @@ describe('Task API', () => {
     });
 
     it('should get all tasks', async () => {
+        // act
         const res = await request(app).get('/api/tasks');
+
+        // assert
         expect(res.statusCode).toEqual(200);
         expect(res.body.tasks.length).toBeGreaterThan(0);
     });
 
     it('should update a task', async () => {
+
+        // arrange
+        const testUpdateData = {
+            name: 'Updated Task',
+            status: 'Done',
+        }
+
+        // act
         const res = await request(app)
             .put(`/api/task/${task._id}`)
-            .send({
-                name: 'Updated Task',
-                status: 'Done',
-            });
+            .send(testUpdateData);
+
+        // assert
         expect(res.statusCode).toEqual(200);
         expect(res.body.task.name).toEqual('Updated Task');
         expect(res.body.task.status).toEqual('Done');
+    });
+
+    it('should delete a task', async () => {
+        const res = await request(app).delete(`/api/task/${task._id}`);
+        expect(res.statusCode).toEqual(204);
+        const deletedTask = await Task.findById(task._id);
+        expect(deletedTask).toBeNull();
     });
 
 

@@ -7,7 +7,7 @@ const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
  * Create a new task and return newly created
  * task if successful
  * 
- * => /api/v1/task/new
+ * => /api/task/new
  * 
  * Throws errors if a task with the same name
  * exist
@@ -46,7 +46,7 @@ exports.createTask = catchAsyncErrors(async (req, res, next) => {
  * Update an existing task and return it if
  * request is successful
  * 
- * => /api/v1/task/:id
+ * => /api/task/:id
  * 
  * Throws an error if task does not exist
  */
@@ -80,7 +80,7 @@ exports.updateTask = catchAsyncErrors(async (req, res, next) => {
 /**
  * Get all tasks
  * 
- * => /api/v1/tasks
+ * => /api/tasks
  */
 exports.getTasks = catchAsyncErrors(async (req, res, next) => {
 
@@ -94,5 +94,33 @@ exports.getTasks = catchAsyncErrors(async (req, res, next) => {
     } catch (error) {
         console.log(error);
     }
+})
 
+/**
+ * Delete an existing task and return it if
+ * request is successful
+ * 
+ * => /api/task/:id
+ * 
+ * Throws an error if task does not exist
+ */
+exports.deleteTask = catchAsyncErrors(async (req, res, next) => {
+    var task = await Task.findById(req.params.id);
+
+    // checks if tasks with the same name existing are throws an error
+    if (!task) {
+        return next(new ErrorHandler('Task not found', 404))
+    }
+
+    try {
+        await Task.findByIdAndDelete(task._id)
+    } catch (error) {
+        console.log(error)
+        return next(new ErrorHandler('Task not found', 404))
+    }
+
+    res.status(204).json({
+        success: true,
+        message: 'Task is deleted'
+    })
 })
