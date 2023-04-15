@@ -10,7 +10,7 @@ const APIFeatures = require('../utils/apiFeatures')
  * => /api/task/new
  * 
  * Throws errors if a task with the same name
- * exist
+ * exists
  */
 exports.createTask = catchAsyncErrors(async (req, res, next) => {
 

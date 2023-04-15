@@ -48,5 +48,14 @@ describe('Project API', () => {
         await Project.findByIdAndDelete(res.body.project._id);
     });
 
+    it('should get all projects', async () => {
+        // act
+        const res = await request(app).get('/api/projects');
+
+        // assert
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.projects.length).toBeGreaterThan(0);
+    });
+
 
 });

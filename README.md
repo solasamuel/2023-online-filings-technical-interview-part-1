@@ -1,6 +1,6 @@
 # 2023-online-filings-technical-interview-part-1
 
-This is an attempt at the OnlineFilings technical interview.
+This is an attempt at the OnlineFilings technical interview with vanilla js in a MERN stack.
 
 ## Installation
 

@@ -9,7 +9,7 @@ const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
  * => /api/project/new
  * 
  * Throws errors if a project with the same name
- * exist
+ * exists
  */
 exports.createProject = catchAsyncErrors(async (req, res, next) => {
 
@@ -33,4 +33,49 @@ exports.createProject = catchAsyncErrors(async (req, res, next) => {
         project
     })
 
+})
+
+/**
+ * Get all projects
+ * 
+ * => /api/projects
+ */
+exports.getProjects = catchAsyncErrors(async (req, res, next) => {
+
+    let projects = await Project.find();
+
+    res.status(200).json({
+        success: true,
+        projects
+    })
+})
+
+
+/**
+ * Update an existing project and return it if
+ * request is successful
+ * 
+ * => /api/task/:id
+ * 
+ * Throws an error if project does not exist
+ */
+exports.updateTask = catchAsyncErrors(async (req, res, next) => {
+
+    var task = await Task.findById(req.params.id);
+
+    // checks if tasks with the same name existing are throws an error
+    if (!task) {
+        return next(new ErrorHandler('Task not found', 404))
+    }
+
+    task = await Task.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+        useFindAndNotify: false,
+    })
+
+    res.status(200).json({
+        success: true,
+        task
+    })
 })
