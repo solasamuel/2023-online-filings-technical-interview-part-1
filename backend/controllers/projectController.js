@@ -162,3 +162,76 @@ exports.assignTaskToProject = catchAsyncErrors(async (req, res, next) => {
         task
     })
 })
+
+/**
+ * Get all tasks with a matching project name and return them if
+ * request is successful
+ * 
+ * => /api/project/filter/:projectName
+ * 
+ * Throws an error if project by the name does not exist
+ */
+exports.filterTasksByProjectName = catchAsyncErrors(async (req, res, next) => {
+
+    const apiFeatures = new APIFeatures(Project.find(), { name: req.body.project })
+        .search()
+        .filter()
+    var project = await apiFeatures.query;
+
+    // checks if project exists
+    if (!project) {
+        return next(new ErrorHandler('Project not found', 404))
+    }
+
+    var tasks = await Task.find({ project: project._id });
+
+    res.status(200).json({
+        success: true,
+        project,
+        tasks
+    })
+})
+
+/**
+ * Get all projects and sort them by start date
+ * 
+ * => /api/projects/sort/startDate
+ */
+exports.getProjectsAndSortByStartDate = catchAsyncErrors(async (req, res, next) => {
+
+    let projects = await Task.find();
+
+    projects = projects.sort((a, b) => {
+        return a.startDate >= b.startDate
+            ? 1
+            : -1
+    })
+
+    res.status(200).json({
+        success: true,
+        projects
+    })
+})
+
+/**
+ * Get all projects and sort them by due date
+ * 
+ * => /api/projects/sort/dueDate
+ */
+exports.getProjectsAndSortByDueDate = catchAsyncErrors(async (req, res, next) => {
+
+    let projects = await Task.find();
+
+    projects = projects.sort((a, b) => {
+        return a.startDate >= b.dueDate
+            ? 1
+            : -1
+    })
+
+    res.status(200).json({
+        success: true,
+        projects
+    })
+})
+
+

@@ -152,4 +152,65 @@ describe('Project API', () => {
 
     });
 
+    // it('should filter tasks by project name', async () => {
+    //     // arrange
+    //     var project = await Project.create({
+    //         name: "morning routine"
+    //     });
+
+    //     var task1 = await Task.create({
+    //         status: "To-do",
+    //         name: "brush my teeth",
+    //     });
+
+    //     var task2 = await Task.create({
+    //         status: "To-do",
+    //         name: "shower",
+    //     });
+
+    //     const requestData1 = {
+    //         project: project._id,
+    //         task: task1._id
+    //     }
+
+    //     const requestData2 = {
+    //         project: project._id,
+    //         task: task2._id
+    //     }
+
+    //     const requestData3 = {
+    //         project: "morning routine"
+    //     }
+
+    //     // act
+    //     const assignRes1 = await request(app)
+    //         .post('/api/project/assignTask')
+    //         .send(requestData1);
+
+    //     const assignRes2 = await request(app)
+    //         .post('/api/project/assignTask')
+    //         .send(requestData2);
+
+    //     const filterRes = await request(app)
+    //         .get(`/api/project/tasks`)
+    //         .send(requestData3);
+
+    //     // assert
+    //     expect(assignRes1.statusCode).toEqual(200);
+    //     expect(assignRes1.body.project.name).toEqual('morning routine');
+    //     expect(assignRes1.body.task.project).toMatch(/[0-9a-fA-F]{24}/);
+
+    //     expect(assignRes2.statusCode).toEqual(200);
+    //     expect(assignRes2.body.project.name).toEqual('morning routine');
+    //     expect(assignRes2.body.task.project).toMatch(/[0-9a-fA-F]{24}/);
+
+    //     expect(filterRes.statusCode).toEqual(200);
+    //     expect(filterRes.body.tasks.length).toEqual(2);
+
+    //     await Task.findByIdAndDelete(assignRes1.body.task._id);
+    //     await Task.findByIdAndDelete(assignRes2.body.task._id);
+    //     await Project.findByIdAndDelete(assignRes1.body.project._id);
+
+    // });
+
 });

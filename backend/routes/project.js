@@ -7,6 +7,9 @@ const {
     updateProject,
     deleteProject,
     assignTaskToProject,
+    filterTasksByProjectName,
+    getProjectsAndSortByDueDate,
+    getProjectsAndSortByStartDate
 } = require('../controllers/projectController');
 
 
@@ -20,6 +23,11 @@ router.route('/project/:id')
 
 router.route('/project/new').post(createProject);
 
-router.route('/project/assignTask').post(assignTaskToProject)
+router.route('/project/assignTask').post(assignTaskToProject);
+
+router.route('/project/tasks').post(filterTasksByProjectName);
+
+router.route('/project/sort/startDate').get(getProjectsAndSortByStartDate);
+router.route('/project/sort/dueDate').get(getProjectsAndSortByDueDate);
 
 module.exports = router;
