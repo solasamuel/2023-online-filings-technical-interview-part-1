@@ -1,4 +1,5 @@
 const Project = require('../models/project');
+const Task = require('../models/task');
 const ErrorHandler = require('../utils/errorHandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 
@@ -94,18 +95,70 @@ exports.deleteProject = catchAsyncErrors(async (req, res, next) => {
 
     // checks if a project with the same name exists and throws an error
     if (!project) {
-        return next(new ErrorHandler('Project not found', 404))
+        return next(new ErrorHandler('Project not found', 404));
     }
 
     try {
-        await Project.findByIdAndDelete(project._id)
+        // select tasks for reset
+        var tasksAssigned = Task.find({ project: project._id });
+
+        await Project.findByIdAndDelete(project._id);
+
+        // reset through map
+        (await tasksAssigned).map(async (task) => {
+            var resetTask = await Task.findByIdAndUpdate(task._id, { project: null }, {
+                new: true,
+                runValidators: true,
+                useFindAndNotify: false,
+            })
+            return resetTask;
+        })
+
+        
     } catch (error) {
         console.log(error)
-        return next(new ErrorHandler('Project not found', 404))
+        return next(new ErrorHandler('Project not found', 404));
     }
 
     res.status(204).json({
         success: true,
-        message: 'Project is deleted.'
+        message: 'Project is deleted'
+    })
+})
+
+/**
+ * Assign an existing task to a project and return them if
+ * request is successful
+ * 
+ * => /api/project/assignTask
+ * 
+ * Throws an error if project or task do not exist
+ */
+exports.assignTaskToProject = catchAsyncErrors(async (req, res, next) => {
+
+    var project = await Project.findById(req.body.project);
+
+    // checks if project exists
+    if (!project) {
+        return next(new ErrorHandler('Project not found', 404))
+    }
+    
+    var task = await Task.findById(req.body.task);
+
+    // checks if task exists
+    if (!task) {
+        return next(new ErrorHandler('Task not found', 404))
+    }
+
+    task = await Task.findByIdAndUpdate(req.body.task, { project: project._id }, {
+        new: true,
+        runValidators: true,
+        useFindAndNotify: false,
+    })
+
+    res.status(200).json({
+        success: true,
+        project,
+        task
     })
 })

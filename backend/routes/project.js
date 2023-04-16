@@ -5,7 +5,8 @@ const {
     createProject,
     getProjects,
     updateProject,
-    deleteProject
+    deleteProject,
+    assignTaskToProject,
 } = require('../controllers/projectController');
 
 
@@ -14,7 +15,11 @@ router.route('/project/new').post(createProject);
 router.route('/projects').get(getProjects);
 
 router.route('/project/:id')
-                        .put(updateProject)
-                        .delete(deleteProject);
+                            .put(updateProject)
+                            .delete(deleteProject);
 
-module.exports = router
+router.route('/project/new').post(createProject);
+
+router.route('/project/assignTask').post(assignTaskToProject)
+
+module.exports = router;

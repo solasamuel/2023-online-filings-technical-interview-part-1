@@ -32,13 +32,13 @@ e.  mark a task as to-do/done - /api/task/:id  - put
 
 f.  filter tasks by status - /api/tasks?status=xxxxx  - get
 
-g.  search tasks by name - /api/tasks?keyword=xxxxx
+g.  search tasks by name - /api/tasks?keyword=xxxxx - get
 
-h.  sort tasks by dates i.  start date  - /api/tasks/sort/startDate
+h.  sort tasks by dates i.  start date  - /api/tasks/sort/startDate - get
 
-ii.  due date - /api/tasks/sort/dueDate
+ii.  due date - /api/tasks/sort/dueDate - get
 
-iii.  done date - /api/tasks/sort/doneDate
+iii.  done date - /api/tasks/sort/doneDate - get
 
 ## Assumptions
 

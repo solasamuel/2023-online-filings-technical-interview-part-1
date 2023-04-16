@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../app');
 const Project = require('../models/project');
+const Task = require('../models/task');
 const mongoose = require('mongoose');
 
 describe('Project API', () => {
@@ -78,6 +79,77 @@ describe('Project API', () => {
         expect(res.statusCode).toEqual(204);
         const deletedProject = await Project.findById(project._id);
         expect(deletedProject).toBeNull();
+    });
+
+    it('should assign a task to a project', async () => {
+        // arrange
+        var project = await Project.create({
+            name: "technical interview"
+        });
+
+        var task = await Task.create({
+            status: "Done",
+            name: "set up development environment",
+        });
+
+        const requestData = {
+            project: project._id,
+            task: task._id
+        }
+
+        // act
+        const res = await request(app)
+            .post('/api/project/assignTask')
+            .send(requestData);
+
+        // assert
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.project.name).toEqual('technical interview');
+        expect(res.body.task.project).toMatch(/[0-9a-fA-F]{24}/);
+
+        await Task.findByIdAndDelete(res.body.task._id);
+        await Project.findByIdAndDelete(res.body.project._id);
+
+    });
+
+    it('should reset tasks when a project is deleted', async () => {
+        // arrange
+        var project = await Project.create({
+            name: "morning routine"
+        });
+
+        var task = await Task.create({
+            status: "To-do",
+            name: "shower",
+        });
+
+        const requestData = {
+            project: project._id,
+            task: task._id
+        }
+
+        // act
+        const assignRes = await request(app)
+            .post('/api/project/assignTask')
+            .send(requestData);
+
+        const deleteRes = await request(app)
+            .delete(`/api/project/${assignRes.body.project._id}`)
+            .send(requestData);
+
+        // assert
+        expect(assignRes.statusCode).toEqual(200);
+        expect(assignRes.body.project.name).toEqual('morning routine');
+        expect(assignRes.body.task.project).toMatch(/[0-9a-fA-F]{24}/);
+
+        expect(deleteRes.statusCode).toEqual(204);
+
+        const tasksStillAssigned = await Task.find({ project: assignRes.body.project._id })
+        expect(tasksStillAssigned.length).toEqual(0);
+
+        await Task.findByIdAndDelete(assignRes.body.task._id);
+        await Project.findByIdAndDelete(assignRes.body.project._id);
+
     });
 
 });
