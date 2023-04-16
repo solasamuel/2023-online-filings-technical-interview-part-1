@@ -74,3 +74,5 @@ ii.  due date - /api/project/sort/dueDate - get
 ```bash
 npm run test
 ```
+
+Please refer to test for request body examples for each endpoint that requires them
