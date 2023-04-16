@@ -1,6 +1,6 @@
 const request = require('supertest');
-const app = require('./app');
-const Task = require('./models/task');
+const app = require('../app');
+const Task = require('../models/task');
 const mongoose = require('mongoose');
 
 describe('Task API', () => {

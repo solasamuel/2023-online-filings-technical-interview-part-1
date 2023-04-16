@@ -13,8 +13,7 @@ const projectSchema = new mongoose.Schema({
         default: Date.now
     },
     dueDate: {
-        type: Date,
-        default: Date.now
+        type: Date
     }
 })
 
