@@ -15,7 +15,7 @@ exports.createProject = catchAsyncErrors(async (req, res, next) => {
 
     const existing = await Project.findOne({ name: req.body.name });
 
-    // checks if tasks with the same name existing are throws an error
+    // checks if a project with the same name exists and throws an error
     if (existing) {
         return next(new ErrorHandler('Project with the same name already exists', 400))
     }
@@ -55,20 +55,20 @@ exports.getProjects = catchAsyncErrors(async (req, res, next) => {
  * Update an existing project and return it if
  * request is successful
  * 
- * => /api/task/:id
+ * => /api/project/:id
  * 
  * Throws an error if project does not exist
  */
-exports.updateTask = catchAsyncErrors(async (req, res, next) => {
+exports.updateProject = catchAsyncErrors(async (req, res, next) => {
 
-    var task = await Task.findById(req.params.id);
+    var project = await Project.findById(req.params.id);
 
-    // checks if tasks with the same name existing are throws an error
-    if (!task) {
-        return next(new ErrorHandler('Task not found', 404))
+    // checks if project exists
+    if (!project) {
+        return next(new ErrorHandler('Project not found', 404))
     }
 
-    task = await Task.findByIdAndUpdate(req.params.id, req.body, {
+    project = await Project.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true,
         useFindAndNotify: false,
@@ -76,6 +76,36 @@ exports.updateTask = catchAsyncErrors(async (req, res, next) => {
 
     res.status(200).json({
         success: true,
-        task
+        project
+    })
+})
+
+
+/**
+ * Delete an existing project and return it if
+ * request is successful
+ * 
+ * => /api/project/:id
+ * 
+ * Throws an error if project does not exist
+ */
+exports.deleteProject = catchAsyncErrors(async (req, res, next) => {
+    var project = await Project.findById(req.params.id);
+
+    // checks if a project with the same name exists and throws an error
+    if (!project) {
+        return next(new ErrorHandler('Project not found', 404))
+    }
+
+    try {
+        await Project.findByIdAndDelete(project._id)
+    } catch (error) {
+        console.log(error)
+        return next(new ErrorHandler('Project not found', 404))
+    }
+
+    res.status(204).json({
+        success: true,
+        message: 'Project is deleted.'
     })
 })

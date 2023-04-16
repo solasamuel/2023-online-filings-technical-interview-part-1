@@ -1,6 +1,6 @@
 const request = require('supertest');
-const app = require('./app');
-const Project = require('./models/project');
+const app = require('../app');
+const Project = require('../models/project');
 const mongoose = require('mongoose');
 
 describe('Project API', () => {
@@ -57,5 +57,27 @@ describe('Project API', () => {
         expect(res.body.projects.length).toBeGreaterThan(0);
     });
 
+    it('should update a project', async () => {
+        // arrange
+        const testUpdateData = {
+            name: 'Updated Project'
+        }
+
+        // act
+        const res = await request(app)
+            .put(`/api/project/${project._id}`)
+            .send(testUpdateData);
+
+        // assert
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.project.name).toEqual('Updated Project');
+    });
+
+    it('should delete a project', async () => {
+        const res = await request(app).delete(`/api/project/${project._id}`);
+        expect(res.statusCode).toEqual(204);
+        const deletedProject = await Project.findById(project._id);
+        expect(deletedProject).toBeNull();
+    });
 
 });

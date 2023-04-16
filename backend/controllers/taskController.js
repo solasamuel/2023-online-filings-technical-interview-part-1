@@ -16,7 +16,7 @@ exports.createTask = catchAsyncErrors(async (req, res, next) => {
 
     const existing = await Task.findOne({ name: req.body.name });
 
-    // checks if tasks with the same name existing are throws an error
+    // checks if a task with the same name exists and throws an error
     if (existing) {
         return next(new ErrorHandler('Task with the same name already exists', 400))
     }
@@ -51,7 +51,7 @@ exports.updateTask = catchAsyncErrors(async (req, res, next) => {
 
     var task = await Task.findById(req.params.id);
 
-    // checks if tasks with the same name existing are throws an error
+    // checks if task exists
     if (!task) {
         return next(new ErrorHandler('Task not found', 404))
     }
@@ -98,7 +98,7 @@ exports.getTasks = catchAsyncErrors(async (req, res, next) => {
 exports.deleteTask = catchAsyncErrors(async (req, res, next) => {
     var task = await Task.findById(req.params.id);
 
-    // checks if tasks with the same name existing are throws an error
+    // checks if a task with the same name exists and throws an error
     if (!task) {
         return next(new ErrorHandler('Task not found', 404))
     }
